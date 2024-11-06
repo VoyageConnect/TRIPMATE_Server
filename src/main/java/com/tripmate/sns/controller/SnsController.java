@@ -2,14 +2,12 @@ package com.tripmate.sns.controller;
 
 import com.tripmate.sns.dto.SnsRequestDTO;
 import com.tripmate.sns.dto.SnsResponseDTO;
-import com.tripmate.sns.service.S3Service;
 import com.tripmate.sns.service.SnsService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;

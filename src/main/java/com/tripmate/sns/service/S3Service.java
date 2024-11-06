@@ -1,14 +1,9 @@
 package com.tripmate.sns.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.tripmate.sns.domain.Sns;
-import com.tripmate.sns.dto.SnsRequestDTO;
-import com.tripmate.sns.repository.SnsRepository;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.patterns.DeclareTypeErrorOrWarning;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
