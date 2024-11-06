@@ -2,39 +2,39 @@ package com.tripmate.sns.controller;
 
 import com.tripmate.sns.dto.SnsRequestDTO;
 import com.tripmate.sns.dto.SnsResponseDTO;
+import com.tripmate.sns.service.S3Service;
 import com.tripmate.sns.service.SnsService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/sns")
 public class SnsController {
 
     private final SnsService snsService;
 
-    public SnsController(SnsService snsService) {
-        this.snsService = snsService;
-    }
-
     // 게시글 작성 API
     @Operation(summary = "게시글 작성", description = "사진을 저장")
     @PostMapping("/post")
-    public ResponseEntity<SnsResponseDTO> createPost(
-            @RequestParam String location,
-            @RequestParam String subLocation,
-            @RequestParam("photo") MultipartFile photo
-    ) {
-        SnsRequestDTO requestDTO = new SnsRequestDTO();
-        requestDTO.setLocation(location);
-        requestDTO.setSubLocation(subLocation);
-        requestDTO.setPhoto(photo);
+    public ResponseEntity<String> createPost(@ModelAttribute SnsRequestDTO snsRequestDTO
+    ) throws IOException {
+        // 저장
+        snsService.createPost(snsRequestDTO);
 
-        SnsResponseDTO newPost = snsService.createPost(requestDTO);
-        return ResponseEntity.ok(newPost);
+        log.info("location={}", snsRequestDTO.getLocation());
+        log.info("subLocation={}", snsRequestDTO.getSubLocation());
+        log.info("photo={}", snsRequestDTO.getPhoto());
+
+        return ResponseEntity.ok("저장완료");
     }
 
     // 게시글 조회 API

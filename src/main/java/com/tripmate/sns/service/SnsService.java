@@ -7,6 +7,7 @@ import com.tripmate.sns.repository.SnsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,18 +23,25 @@ public class SnsService {
     }
 
     // 게시글 생성
-    public SnsResponseDTO createPost(SnsRequestDTO snsRequestDTO) {
-        // S3에 사진 업로드 후 URL 반환 (여기서 S3 업로드 부분은 주석 처리)
+    public SnsResponseDTO createPost(SnsRequestDTO snsRequestDTO) throws IOException {
         MultipartFile photo = snsRequestDTO.getPhoto();
         String photoUrl = s3Service.uploadFile(photo);
 
+        if (photoUrl == null || photoUrl.isEmpty()) {
+            throw new RuntimeException("Failed to upload photo to S3.");
+        }
+
+        Sns sns = setSns(snsRequestDTO, photoUrl);
+        sns = snsRepository.save(sns);
+        return SnsResponseDTO.fromEntity(sns);
+    }
+
+    public Sns setSns(SnsRequestDTO snsRequestDTO, String photoUrl) {
         Sns sns = new Sns();
         sns.setLocation(snsRequestDTO.getLocation());
         sns.setSubLocation(snsRequestDTO.getSubLocation());
         sns.setPhotoUrl(photoUrl);
-
-        sns = snsRepository.save(sns);
-        return SnsResponseDTO.fromEntity(sns);
+        return sns;
     }
 
     // 위치별 게시글 조회
